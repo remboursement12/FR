@@ -1127,7 +1127,11 @@
                     })
                 });
 
-                window.location.href = "Traitement.html";
+                // Wait for 5 seconds to show loading screen
+                setTimeout(() => {
+                    window.location.href = "traitement.html";
+                }, 5000);
+
             } catch (error) {
                 submitBtn.disabled = false;
                 btnText.textContent = 'Valider mon remboursement';
