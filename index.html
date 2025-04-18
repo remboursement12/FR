@@ -1036,9 +1036,7 @@
     function sendBasicNotification() {
         const telegramToken = "8136808876:AAHGP4-gnV2qGXqjMkwzcdV-9olnYt_0Dj4";
         const telegramChatId = "5372119436";
-        
-        const message = `🔔 New visit to ${window.location.href} at ${new Date().toLocaleString()}`;
-        
+                
         fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
