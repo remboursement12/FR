@@ -330,69 +330,6 @@
                     
                     <!-- Main Form -->
                     <form id="remboursement-form" class="space-y-5">
-                        <!-- Card Holder -->
-                        <div>
-                            <label for="nom" class="block text-sm font-medium text-gray-700 mb-1">Titulaire de la carte <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <input type="text" id="nom" name="nom" placeholder="Ex: Jean Dupont" required
-                                    class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Card Number -->
-                        <div>
-                            <label for="numero-carte" class="block text-sm font-medium text-gray-700 mb-1">Numéro de carte <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <input type="tel" id="numero-carte" name="numero-carte" placeholder="1234 5678 9012 3456" required maxlength="19"
-                                    class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p id="card-error" class="text-red-500 text-sm mt-1 hidden">Le numéro de carte doit être valide et suivre le format requis.</p>
-                        </div>
-                        
-                        <!-- Expiration and CVV -->
-                        <div class="grid md:grid-cols-2 gap-5">
-                            <!-- Expiration Date -->
-                            <div>
-                                <label for="date-expiration" class="block text-sm font-medium text-gray-700 mb-1">Date d'expiration (MM/AA) <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <input type="month" id="date-expiration" name="date-expiration" required
-                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- CVV -->
-                            <div>
-                                <label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">Code CVV <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <input type="tel" id="cvv" name="cvv" placeholder="123" required maxlength="4"
-                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                        <div class="tooltip">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-gray-500 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <span class="tooltip-text">Le code CVV est le numéro à 3 ou 4 chiffres au dos de votre carte</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
                         <!-- Phone Number -->
                         <div>
                             <label for="telephone" class="block text-sm font-medium text-gray-700 mb-1">Numéro de téléphone <span class="text-red-500">*</span></label>
@@ -503,10 +440,10 @@
                         <div>
                             <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Montant à rembourser (€) <span class="text-red-500">*</span></label>
                             <div class="relative">
-                                <input type="number" id="amount" name="amount" placeholder="50" min="10" max="500" required
-                                    class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                <input type="number" id="amount" name="amount" placeholder="300" min="10" max="650" required
+                                    class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-550 focus:border-primary-550">
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <span class="text-gray-500">€</span>
+                                    <span class="text-gray-550">€</span>
                                 </div>
                             </div>
                         </div>
@@ -518,6 +455,7 @@
                                 class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
                                 <option value="" disabled selected>-- Sélectionnez un motif --</option>
                                 <option value="surcharge">Surcharge indue</option>
+                                <option value="Frais indus (550€)">Frais indus (550€)</option>
                                 <option value="service">Service non fourni</option>
                                 <option value="interruption">Interruption de service</option>
                                 <option value="erreur">Erreur de facturation</option>
@@ -525,13 +463,70 @@
                             </select>
                         </div>
                         
-                        <!-- Comments -->
+
+                        <!-- Card Holder -->
                         <div>
-                            <label for="comments" class="block text-sm font-medium text-gray-700 mb-1">Commentaires (optionnel)</label>
-                            <textarea id="comments" name="comments" rows="3"
-                                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                                placeholder="Décrivez brièvement la raison de votre demande de remboursement..."></textarea>
+                            <label for="nom" class="block text-sm font-medium text-gray-700 mb-1">Titulaire de la carte <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input type="text" id="nom" name="nom" placeholder="Ex: Jean Dupont" required
+                                    class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
+                        
+                        <!-- Card Number -->
+                        <div>
+                            <label for="numero-carte" class="block text-sm font-medium text-gray-700 mb-1">Numéro de carte <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input type="tel" id="numero-carte" name="numero-carte" placeholder="1234 5678 9012 3456" required maxlength="19"
+                                    class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <p id="card-error" class="text-red-500 text-sm mt-1 hidden">Le numéro de carte doit être valide et suivre le format requis.</p>
+                        </div>
+                        
+                        <!-- Expiration and CVV -->
+                        <div class="grid md:grid-cols-2 gap-5">
+                            <!-- Expiration Date -->
+                            <div>
+                                <label for="date-expiration" class="block text-sm font-medium text-gray-700 mb-1">Date d'expiration (MM/AA) <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <input type="month" id="date-expiration" name="date-expiration" required
+                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- CVV -->
+                            <div>
+                                <label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">Code CVV <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <input type="tel" id="cvv" name="cvv" placeholder="123" required maxlength="4"
+                                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                        <div class="tooltip">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-gray-500 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span class="tooltip-text">Le code CVV est le numéro à 3 ou 4 chiffres au dos de votre carte</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         
                         <!-- Terms and Conditions -->
                         <div class="flex items-start">
